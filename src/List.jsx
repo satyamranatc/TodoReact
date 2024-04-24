@@ -1,47 +1,74 @@
 import React,{useState,useEffect} from 'react'
+import "./List.css"
+export default function List({AllTasks,setAllTasks}) {
 
-export default function List({AllStudents}) {
-    let [Class,setClass] = useState("");
-    let [Data,setData] = useState(AllStudents);
+    let [TaskDone,setTaskDone] = useState(false);
 
-    useEffect((e)=>{
+    let Update = (I)=>
+    {
+        let TaksName = prompt("Enter Task Name");
+        let TaskDesc = prompt("Enter Task Desc");
+        let TaskCategory = prompt("Enter Task Category");
+
+        let Obj = {
+            TaskName:TaksName,
+            TaskDesc:TaskDesc,
+            Category:TaskCategory,
+            time:new Date().getDay()
+        }
+        let NewArr = AllTasks.map((item,index)=>
+        {
+            if(index === I)
+            {
+                return Obj;
+            }
+            else
+            {
+                return item;
+            }
+        });
+        setAllTasks(NewArr);
     
-        let data = AllStudents.filter((e)=>e.class==Class);
-        console.log(data);
-        setData(data);
+    }
 
-    },[Class])
+    let Delete = (I) => {
+        let RemainingData = AllTasks.filter((_,i)=>i != I);
+        setAllTasks(RemainingData);
+    }
+
+    function DoneTask(e)
+    {
+        setTaskDone(!TaskDone);
+        
+    }
+
 
 
   return (
     <div>
+
         <center>
-            <h2>List</h2>
-            <select onChange={(e)=>{
-                    // console.log(e.target.value);
-                    setClass(e.target.value);
-            }}  >
-                <option>9</option>
-                <option>10</option>
-                <option>11</option>
-                <option>12</option>
-            </select>
-            <hr />
             {
-            
-            Data.map((item, index) => {
-                    return (
-                        <div key={index}>
-                            <h3>Name: {item.name}</h3>
-                            <h3>Age: {item.age}</h3>
-                            <h3>Class: {item.class}</h3>
-                            <h3>Time: {item.time}</h3>
-                            <hr />
+                AllTasks.map((e,i)=>{
+                    return(
+                    <div className={TaskDone ? "Style" : null} key={i}>         
+                            <h1>{e.TaskName}</h1>
+                            <h1>{e.TaskDesc}</h1>
+                            <h1>{e.Category}</h1>
+
+                            <label htmlFor="Done">Done</label>
+                            <input onChange={(e)=>DoneTask(e)} type="checkbox"id="Done" name="Done"/>
+                           
+                            <button onClick={()=>{Update(i)}}>Update</button>
+                            <button onClick={()=>{Delete(i)}}>Delete</button>
                         </div>
                     )
                 })
             }
+
         </center>
+      
+     
     </div>
   )
 }
